@@ -1,7 +1,7 @@
  ! NOAA/PMEL TMAP
  ! FERRET v6.97 (PyFerret 1.3 beta/opt)
  ! Linux 2.6.32-573.22.1.el6.x86_64 - 05/16/16
- !  6-Jul-16 10:42     
+ !  6-Jul-16 13:17     
 
 Go 1head.jnl
 Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160401.ocean_month.ensm.nc
@@ -12,5 +12,5 @@ Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-int
 Go 4body.jnl
 Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160101.ocean_month.ensm.nc
 Go 5body.jnl
-FRAME/FILE=tempa_latest4mon_05_16.png
+FRAME/FILE=tempa_latest4mon_05_2016.png
 EXIT /PROGRAM

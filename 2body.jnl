@@ -4,8 +4,6 @@ use "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"
 !use "/archive/snz/fms/oda_data/sst/monthly/sstcm2_monthly_188001_201912.nc"
 sp dmget /archive/x1y/fms/oda_data/sst/haddaily/mnm/sstcm21_hadmonthly.nc
 
-show data
-
 !let diff = temp[d=1]-temp[d=2,l=1:6,gz=temp[d=1]@asn]
 let temp2 = temp[d=2,gxyz=temp[d=1]@asn,gt=temp[d=1]@asn]
 let diff1 = temp[d=1,z=0:300,l=1]-temp2[z=0:300,l=1]

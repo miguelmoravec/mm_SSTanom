@@ -1,36 +1,42 @@
 #!/usr/bin/env python
 
 import subprocess
+import datetime
+
 try:
     import pyferret
 except ImportError:
     print "You must module load pyferret"
     exit(1)   
 
-def mymain():
+def mymain():    
 
-    basedir = '/archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/2016'
+    basedir = '/archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/'
     filedir = "01.ocean_month.ensm.nc"
 
     print 'Please answer the following questions to plot SST anomalies over the Pacific for the last 4 months...'
-    month = raw_input("Enter today's month (i.e. 09,10,11, etc): ")
-    num = int(month)
-    if num < 1 or num > 12:
-	print 'invalid month input, please try again'
-	exit(1)
-    pre1 = '0' + str(num - 1)
-    pre2 = '0' + str(num - 2)
-    pre3 = '0' + str(num - 3)
-    pre4 = '0' + str(num - 4)
-    year = raw_input("Enter today's year (i.e. 15,16,17, etc): ")
-    yr_num = int(year)
-    if yr_num < 1 or num > 99:
-	print 'invalid year input, please try again'
-	exit(1)
+    today = raw_input("Enter today's date (mmyyyy): ")
+    date = datetime.datetime.strptime('25' + today, '%d%m%Y')
+    
+    month = date.strftime('%m')
+    year = date.strftime('%Y')
+
+    math1 = date + datetime.timedelta(days=-30)
+    pre1 =  math1.strftime('%Y%m') #generates date in format of nc files
+
+    math2 = date + datetime.timedelta(days=-60)
+    pre2 =  math2.strftime('%Y%m')
+
+    math3 = date + datetime.timedelta(days=-90)
+    pre3 =  math3.strftime('%Y%m')
+
+    math4 = date + datetime.timedelta(days=-120)
+    pre4 =  math4.strftime('%Y%m')
+
     print 'Generating plots for months preceeding', month,'/', year, '...'
 
-    dirWhereIwantThisToHappen="/home/mmm/SSTanom"
-    child = subprocess.Popen(["dmget", basedir + pre1 + filedir, basedir + pre2 + filedir, basedir + pre3 + filedir, basedir + pre4 + filedir],cwd=dirWhereIwantThisToHappen)
+    dirWhereIwantThisToHappen="."
+    child = subprocess.Popen(["dmget", basedir + pre1 + filedir, basedir + pre2 + filedir, basedir + pre3 + filedir, basedir + pre4 + filedir, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=dirWhereIwantThisToHappen)
     child.communicate() #this will close the subprocess
 
     pyferret.start(quiet=True)
@@ -83,7 +89,7 @@ def mymain():
     cmd10 = 'FRAME/FILE=tempa_latest4mon_' + month + '_' + year + '.png'
     (errval, errmsg) = pyferret.run(cmd10)
 
-    print 'Plots generated for months preceeding', month,'/', year, ', and are located at ', cmd10
+    print 'Plots (if generated) for months preceeding', month,'/', year, ' are located in the local directory and are named ', cmd10
 
 if __name__=="__main__":
     mymain()
