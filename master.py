@@ -16,80 +16,53 @@ def mymain():
 
     print 'Please answer the following questions to plot SST anomalies over the Pacific for the last 4 months...'
     today = raw_input("Enter today's date (mmyyyy): ")
+    
     date = datetime.datetime.strptime('25' + today, '%d%m%Y')
     
     month = date.strftime('%m')
     year = date.strftime('%Y')
 
-    math1 = date + datetime.timedelta(days=-30)
-    pre1 =  math1.strftime('%Y%m') #generates date in format of nc files
-
-    math2 = date + datetime.timedelta(days=-60)
-    pre2 =  math2.strftime('%Y%m')
-
-    math3 = date + datetime.timedelta(days=-90)
-    pre3 =  math3.strftime('%Y%m')
-
-    math4 = date + datetime.timedelta(days=-120)
-    pre4 =  math4.strftime('%Y%m')
-
     print 'Generating plots for months preceeding', month,'/', year, '...'
-
-    dirWhereIwantThisToHappen="."
-    child = subprocess.Popen(["dmget", basedir + pre1 + filedir, basedir + pre2 + filedir, basedir + pre3 + filedir, basedir + pre4 + filedir, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=dirWhereIwantThisToHappen)
-    child.communicate() #this will close the subprocess
 
     pyferret.start(quiet=True)
     
-    action="Go"
-    fname="1head.jnl"
-    cmd = ' '.join([action,fname])
+    cmd = "Go 1head.jnl"
     (errval, errmsg) = pyferret.run(cmd)
 
-    action="Use"
-    fname= basedir + pre1 + filedir
-    cmd2 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd2)
+    count = 0
 
-    action="Go"
-    fname="2body.jnl"
-    cmd3 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd3)
+    while (count < 4):
+	
+	count = count + 1
 
-    action="Use"
-    fname=basedir + pre2 + filedir
-    cmd4 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd4)
+    	math = date + datetime.timedelta(days=(-30*count))
+    	prev_date =  str(math.strftime('%Y%m'))
+        prev_month =  str(math.strftime('%m'))
 
-    action="Go"
-    fname="3body.jnl"
-    cmd5 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd5)
-    
-    action="Use"
-    fname=basedir + pre3 + filedir
-    cmd6 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd6)
+	dirWhereIwantThisToHappen="."
+        child = subprocess.Popen(["dmget", basedir + prev_date + filedir, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=dirWhereIwantThisToHappen)
+        child.communicate() #this will close the subprocess
 
-    action="Go"
-    fname="4body.jnl"
-    cmd7 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd7)
+        cmd1 ="Use " + basedir + prev_date + filedir
+        (errval, errmsg) = pyferret.run(cmd1)
 
-    action="Use"
-    fname=basedir + pre4 + filedir
-    cmd8 = ' '.join([action,fname])
-    (errval, errmsg) = pyferret.run(cmd8)
+        cmd2 = 'Let diff1 = temp[d=' + str(count+1) + ',l=1] - temp[d=1,l=' + prev_month + ']'
+        (errval, errmsg) = pyferret.run(cmd2)
 
-    action="Go"
-    fname="5body.jnl"
-    cmd9 = ' '.join([action,fname])
+        cmd3 = 'set viewport V' + str(count)
+        (errval, errmsg) = pyferret.run(cmd3)
+
+        cmd4 = "Go 2body_alt.jnl"
+        (errval, errmsg) = pyferret.run(cmd4)
+
+
+    cmd9 = 'set mode/last verify'
     (errval, errmsg) = pyferret.run(cmd9)
 
     cmd10 = 'FRAME/FILE=tempa_latest4mon_' + month + '_' + year + '.png'
     (errval, errmsg) = pyferret.run(cmd10)
 
-    print 'Plots (if generated) for months preceeding', month,'/', year, ' are located in the local directory and are named ', cmd10
+    print 'Plots (if data was available in archive) for 4 months preceeding', month,'/', year, ' are located in the local directory and are named ', cmd10
 
 if __name__=="__main__":
     mymain()
