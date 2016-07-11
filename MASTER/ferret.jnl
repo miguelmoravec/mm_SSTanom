@@ -1,0 +1,25 @@
+ ! NOAA/PMEL TMAP
+ ! FERRET v6.97 (PyFerret 1.3 beta/opt)
+ ! Linux 2.6.32-573.22.1.el6.x86_64 - 05/16/16
+ ! 11-Jul-16 14:47     
+
+Go 1head_alt.jnl
+Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160401.ocean_month.ensm.nc
+Let diff1 = temp[d=2,l=1] - temp[d=1,l=04]
+set viewport V1
+Go 2body_alt.jnl
+Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160301.ocean_month.ensm.nc
+Let diff1 = temp[d=3,l=1] - temp[d=1,l=03]
+set viewport V2
+Go 2body_alt.jnl
+Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160201.ocean_month.ensm.nc
+Let diff1 = temp[d=4,l=1] - temp[d=1,l=02]
+set viewport V3
+Go 2body_alt.jnl
+Use /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/20160101.ocean_month.ensm.nc
+Let diff1 = temp[d=5,l=1] - temp[d=1,l=01]
+set viewport V4
+Go 2body_alt.jnl
+set mode/last verify
+FRAME/FILE=tempa_latest4mon_05_2016.png
+EXIT /PROGRAM
