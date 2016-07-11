@@ -1,3 +1,0 @@
-cancel mode nodata_lab
-fill/lev=(-inf)(-7,-3,1)(-3,3,0.5)(3,7,1)(inf)/PALETTE=blue_darkred diff1[z=0:300,y=2s:2n@ave,x=120e:78w]
-

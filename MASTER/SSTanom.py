@@ -3,10 +3,10 @@
 #This script automatically generates plots of SST anomlies over the Pacific for the preceding 4 months
 #This script relies on a standard naming convention of SST NetCDF files in this directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
 #This script also relies on the historical data located in this archived file: /archive/x1y/yxue/realtime/temp.clim.1981_2010.nc
-#This script also relies on the existene of two jnl files, '1head!alt.jnl' and '2body_alt.jnl', in the local directory
 
 import subprocess
 import datetime
+import os
 
 try:
 	import pyferret
@@ -38,8 +38,7 @@ def mymain():
 	pyferret.start(quiet=True)
 	os.remove("ferret.jnl")
     
-	cmd = "Go 1head_alt.jnl"
-	(errval, errmsg) = pyferret.run(cmd)
+	header()
 
 	count = 0
 
@@ -58,12 +57,12 @@ def mymain():
         	cmd1 ="Use " + basedir + prev_date + filetail
         	cmd2 = 'Let diff1 = temp[d=' + str(count+1) + ',l=1] - temp[d=1,l=' + prev_month + ']'
        	 	cmd3 = 'set viewport V' + str(count)
-        	cmd4 = "Go 2body_alt.jnl"
 
         	(errval, errmsg) = pyferret.run(cmd1)
         	(errval, errmsg) = pyferret.run(cmd2)
         	(errval, errmsg) = pyferret.run(cmd3)
-        	(errval, errmsg) = pyferret.run(cmd4)
+
+		body()
 
 	cmd9 = 'set mode/last verify'
 	cmd10 = 'FRAME/FILE=' + filename
@@ -73,6 +72,34 @@ def mymain():
 
 	print 'The image file containing the SST anomoly plots for the 4 months preceeding ', month,'/', year, ' is located in the local directory (if data was available in archive) and is named: ', filename
 	print 'If no plots generated, please see script comments to find necessary input files.'
+
+def header():
+
+	com2 = 'cancel data/all'
+	com3 = 'def sym print_opt $1"0"'
+	com4 = 'define VIEWPORT/xlim=0.,0.5/ylim=0.5,1.0 V1'
+	com5 = 'define VIEWPORT/xlim=0.,0.5/ylim=0.,0.5 V2'
+	com6 = 'define VIEWPORT/xlim=0.5,1.0/ylim=0.5,1.0 V3'
+	com7 = 'define VIEWPORT/xlim=0.5,1.0/ylim=0.,0.5 V4'
+	com8 = 'set mem/size=240'
+	com9 = 'use "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"'
+
+	(errval, errmsg) = pyferret.run(com2)
+	(errval, errmsg) = pyferret.run(com3)
+	(errval, errmsg) = pyferret.run(com4)
+	(errval, errmsg) = pyferret.run(com5)
+	(errval, errmsg) = pyferret.run(com6)
+	(errval, errmsg) = pyferret.run(com7)
+	(errval, errmsg) = pyferret.run(com8)
+	(errval, errmsg) = pyferret.run(com9)
+
+def body():
+
+	com10 = 'cancel mode nodata_lab'
+	com11 = 'fill/lev=(-inf)(-7,-3,1)(-3,3,0.5)(3,7,1)(inf)/PALETTE=blue_darkred diff1[z=0:300,y=2s:2n@ave,x=120e:78w]'
+
+	(errval, errmsg) = pyferret.run(com10)
+	(errval, errmsg) = pyferret.run(com11)
 
 if __name__=="__main__":
     mymain()
