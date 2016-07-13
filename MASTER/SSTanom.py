@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
+#Written by Miguel M. Moravec. For questions pleace email miguel.moravec@vanderbilt.edu
 #This script automatically generates plots of SST anomlies over the Pacific for the preceding 4 months
-#This script relies on a standard naming convention of SST NetCDF files in this directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
+#This script relies on the standard naming convention of SST NetCDF files in this directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
 #This script also relies on the historical data located in this archived file: /archive/x1y/yxue/realtime/temp.clim.1981_2010.nc
 
 import subprocess
@@ -42,7 +43,11 @@ def mymain():
 
 	count = 0
 
-	while (count < 4):
+	while (count < 4): 
+
+		#this loop selects the appropriate dataset and generates a plot for each month comparing that month's data to the historical average. 
+		#The increasing 'count' variable is used both to subtract a month from the date and to ensure each plot is generated in a unique corner of the image.
+		#The historical data was already loaded into pyferret using the header() method, and then each monthly data set is loaded into the loop in reverse chronological order
 	
 		count = count + 1
 
@@ -50,8 +55,8 @@ def mymain():
     		prev_date =  str(math.strftime('%Y%m'))
         	prev_month =  str(math.strftime('%m'))
 
-		dirWhereIwantThisToHappen="."
-        	child = subprocess.Popen(["dmget", basedir + prev_date + filetail, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=dirWhereIwantThisToHappen)
+		d="." #uses local directory
+        	child = subprocess.Popen(["dmget", basedir + prev_date + filetail, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=d)
         	child.communicate()
 
         	cmd1 ="Use " + basedir + prev_date + filetail
@@ -75,6 +80,8 @@ def mymain():
 
 def header():
 
+	#the following clears data from previously running pyferrets, establishes base parameters, and loads historical data
+
 	com2 = 'cancel data/all'
 	com3 = 'def sym print_opt $1"0"'
 	com4 = 'define VIEWPORT/xlim=0.,0.5/ylim=0.5,1.0 V1'
@@ -94,6 +101,8 @@ def header():
 	(errval, errmsg) = pyferret.run(com9)
 
 def body():
+
+	#the following plots SST anomalies for each month. This method depends on functions computed in the loop in the main method and will be run 4 times
 
 	com10 = 'cancel mode nodata_lab'
 	com11 = 'fill/lev=(-inf)(-7,-3,1)(-3,3,0.5)(3,7,1)(inf)/PALETTE=blue_darkred diff1[z=0:300,y=2s:2n@ave,x=120e:78w]'
