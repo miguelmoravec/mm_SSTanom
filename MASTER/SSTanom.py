@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#Written by Miguel M. Moravec. For questions pleace email miguel.moravec@vanderbilt.edu
+#Written by Miguel M. Moravec. For questions please email miguel.moravec@vanderbilt.edu
 #This script automatically generates plots of SST anomlies over the Pacific for the preceding 4 months
 #This script relies on the standard naming convention of SST NetCDF files in this directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
 #This script also relies on the historical data located in this archived file: /archive/x1y/yxue/realtime/temp.clim.1981_2010.nc
