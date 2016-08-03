@@ -2,8 +2,8 @@
 
 #Written by Miguel M. Moravec. For questions please email miguel.moravec@vanderbilt.edu
 #This script automatically generates plots of Pacific SST anomalies for the 4 months preceding a specified date
-#This script relies on the standard naming convention of SST NetCDF files in this directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
-#This script also relies on the historical data located in this archived file: /archive/x1y/yxue/realtime/temp.clim.1981_2010.nc
+#This script relies on the standard naming convention of SST NetCDF files in this model directory: /archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/
+#This script also relies on the historical data located in this archived climatology file: /archive/x1y/yxue/realtime/temp.clim.1981_2010.nc
 
 import subprocess
 import datetime
@@ -38,9 +38,9 @@ def mymain(argv):
 			print "'-h' launches this help text"
 			print "'-t' generates today's most recent plots"
 			print "'-d mmyyy' generates plots for months preceding a particular date i.e. '-d 072016' \n"
-			print 'This script relies on the standard naming convention of SST NetCDF files in this directory:'
+			print 'This script relies on the standard naming convention of SST NetCDF files in this model directory:'
 			print '/archive/x1y/FMS/c3/CM2.1_ECDA/CM2.1R_ECDA_v3.1_1960_pfl_auto/gfdl.ncrc3-intel-prod-openmp/history/tmp/ \n'
-			print 'This script also relies on the historical data located in this archived file:'
+			print 'This script also relies on the historical data located in this archived climatology file:'
 			print '/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc \n'
 			print 'Written by Miguel M. Moravec. For questions please email miguel.moravec@vanderbilt.edu \n'
         		sys.exit()
@@ -78,7 +78,7 @@ def mymain(argv):
 
 	print 'Generating plots for Pacific SST anomalies for months preceeding', month,'/', year, '...'
 
-	filename = 'tempa_latest4mon_' + month + '_' + year + '.png'
+	filename = 'tempa_latest4mon_' + year + '_' + month + '.png'
 
 	if ( not pyferret.start(quiet=True, journal=False, unmapped=True) ):
 		print "ERROR. Pyferret start failed. Exiting . . ."
@@ -99,6 +99,7 @@ def mymain(argv):
     		math = date + datetime.timedelta(days=(-30*count))
     		prev_date =  str(math.strftime('%Y%m'))
         	prev_month =  str(math.strftime('%m'))
+		prev_year =  str(math.strftime('%Y'))
 
 		d="." #uses local directory
         	child = subprocess.Popen(["dmget", basedir + prev_date + filetail, "/archive/x1y/yxue/realtime/temp.clim.1981_2010.nc"],cwd=d)
@@ -114,9 +115,11 @@ def mymain(argv):
 
 		body()
 
+	cmd8 = str('ANNOTATE/NOUSER/XPOS=-2.2/YPOS=5 "SST Anomalies"')
 	cmd9 = 'set mode/last verify'
 	cmd10 = 'FRAME/FILE=' + filename
 
+	(errval, errmsg) = pyferret.run(cmd8)
 	(errval, errmsg) = pyferret.run(cmd9)
 	(errval, errmsg) = pyferret.run(cmd10)
 
