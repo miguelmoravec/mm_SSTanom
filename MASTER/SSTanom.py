@@ -115,7 +115,7 @@ def mymain(argv):
 
 		body()
 
-	cmd8 = str('ANNOTATE/NOUSER/XPOS=-2.2/YPOS=5 "SST Anomalies"')
+	cmd8 = str('ANNOTATE/NOUSER/XPOS=-2.5/YPOS=5 "Pacific SST Anomalies"')
 	cmd9 = 'set mode/last verify'
 	cmd10 = 'FRAME/FILE=' + filename
 
